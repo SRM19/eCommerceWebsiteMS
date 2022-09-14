@@ -18,7 +18,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
             _response = new();
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("GetCart/{userId}")]
         public async Task<object> GetCart(string userId)
         {
             try
@@ -33,7 +33,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpPost("AddCart")]
         public async Task<object> AddCart(CartDto cartDto)
         {
             try
@@ -49,7 +49,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpPost("UpdateCart")]
         public async Task<object> UpdateCart(CartDto cartDto)
         {
             try
@@ -65,7 +65,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpPost("RemoveCart")]
         public async Task<object> RemoveCart([FromBody]int cartId)
         {
             try
@@ -81,7 +81,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
             return _response;
         }
 
-        [HttpDelete("{userId}")]
+        [HttpDelete("ClearCart/{userId}")]
         public async Task<object> ClearCart(string userId)
         {
             try
