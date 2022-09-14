@@ -12,11 +12,13 @@ namespace Foody.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _productService;
+        private readonly ICartService _cartService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
         {
             _logger = logger;
             _productService = productService;
+            _cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -57,13 +59,52 @@ namespace Foody.Web.Controllers
         public async Task<IActionResult> Details(int productId)
         {
             ProductsDto product = new();
-            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId,"");
+            var response = await _productService.GetProductByIdAsync<ResponseDto>(productId, "");
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<ProductsDto>(Convert.ToString(response.Result));
                 return View(product);
             }
             return NotFound();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("Details")]
+        public async Task<IActionResult> DetailsPost(ProductsDto product)
+        {
+            CartDto cart = new CartDto()
+            {
+                CartHeader = new()
+                {
+                    UserId = User.Claims.Where(u => u.Type == "sub").FirstOrDefault()?.Value
+                }
+            };
+            CartDetailsDto cartProduct = new()
+            {
+                ProductId = product.ProductId,
+                Count = product.Count
+            };
+            //also populate the product in cart details in 2 ways
+            //one way is to use hidden attribute and build the object
+            //call product api service and get the product
+
+            //response from product api service need to deserialized and added to cart details product field
+            var response = await _productService.GetProductByIdAsync<ResponseDto>(product.ProductId, "");
+            if (response != null && response.IsSuccess == true)
+            {
+                cartProduct.Product = JsonConvert.DeserializeObject<ProductsDto>(Convert.ToString(response.Result));
+            }
+            List<CartDetailsDto> cartDetails = new() { cartProduct };
+            cart.CartDetails = cartDetails;
+
+            var acc_token = await HttpContext.GetTokenAsync("access_token");
+            var addtoCart = await _cartService.AddtoCartAsync<ResponseDto>(cart, acc_token);
+            if (addtoCart != null && addtoCart.IsSuccess == true)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
         }
     }
 }
