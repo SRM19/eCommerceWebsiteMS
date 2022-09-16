@@ -14,8 +14,8 @@ namespace Foody.MessageBus
         public MessageBus()
         {
             _hostname = "localhost";
-            _username = "user1";
-            _password = "password1!";
+            _username = "guest";//user1
+            _password = "guest";//Password1!
         }
         public void SendMessage(BaseMessage message, string queueName)
         {
@@ -31,7 +31,7 @@ namespace Foody.MessageBus
              _connection = factory.CreateConnection();
 
             //after connection is established, send the msg
-            //create channel to send msg to RMQ
+            //create channel to send msg to RMQ channel is created as model in .net
 
             using var channel = _connection.CreateModel(); //this establishes a connection and returns a channel, session and model
             
