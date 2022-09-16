@@ -64,5 +64,39 @@ namespace Foody.Web.Services
                 AccessToken = token
             });
         }
+
+        public async Task<T> ApplyCoupon<T>(CartDto cart, string token)
+        {
+            return await this.SendRequestAsync<T>(new APIRequest()
+            {
+                Method = Utils.Constants.RequestType.POST,
+                Data = cart,
+                Url = Utils.Constants.ShoppingCartAPIBase + "/api/cart/ApplyCoupon",
+                AccessToken = token
+            });
+        }
+
+        public async Task<T> RemoveCoupon<T>(string userId, string token)
+        {
+            return await this.SendRequestAsync<T>(new APIRequest()
+            {
+                Method = Utils.Constants.RequestType.POST,
+                Data = userId,
+                Url = Utils.Constants.ShoppingCartAPIBase + "/api/cart/RemoveCoupon",
+                AccessToken = token
+            });
+        }
+
+        public async Task<T> Checkout<T>(CartHeaderDto cartHeaderDto, string token)
+        {
+            return await this.SendRequestAsync<T>(new APIRequest
+            {
+                Method = Utils.Constants.RequestType.POST,
+                Data = cartHeaderDto,
+                Url = Utils.Constants.ShoppingCartAPIBase + "/api/cart/Checkout",
+                AccessToken = token
+
+            });
+        }
     }
 }

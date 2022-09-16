@@ -1,8 +1,7 @@
 using AutoMapper;
-using Foody.MessageBus;
-using Foody.Services.ShoppingCartApi;
-using Foody.Services.ShoppingCartApi.DbContexts;
-using Foody.Services.ShoppingCartApi.Repository;
+using Foody.Services.CouponApi;
+using Foody.Services.CouponApi.DbContexts;
+using Foody.Services.CouponApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -13,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddSingleton<IMessageBus, MessageBus>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -41,9 +39,9 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
@@ -86,7 +84,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); //!important: need to be added to use the token provided by user for validation
+app.UseAuthentication();
 
 app.UseAuthorization();
 

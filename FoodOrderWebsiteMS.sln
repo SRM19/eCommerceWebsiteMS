@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Web", "Foody.Web\Foody.Web.csproj", "{E0F9CE13-34F1-4AC0-9977-1934A1EE89D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foody.Web", "Foody.Web\Foody.Web.csproj", "{E0F9CE13-34F1-4AC0-9977-1934A1EE89D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Services.ProductsApi", "Foody.Services.ProductsApi\Foody.Services.ProductsApi.csproj", "{4096B4B1-B591-489F-A89F-80FBFBCD3CF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foody.Services.ProductsApi", "Foody.Services.ProductsApi\Foody.Services.ProductsApi.csproj", "{4096B4B1-B591-489F-A89F-80FBFBCD3CF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Services.Identity", "Foody.Services.Identity\Foody.Services.Identity.csproj", "{CB17F7CA-A1FB-40F4-A312-AD136559C7EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foody.Services.Identity", "Foody.Services.Identity\Foody.Services.Identity.csproj", "{CB17F7CA-A1FB-40F4-A312-AD136559C7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Services.ShoppingCartApi", "Foody.Services.ShoppingCartApi\Foody.Services.ShoppingCartApi.csproj", "{AA118556-C638-4C8C-B177-902069C004C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foody.Services.ShoppingCartApi", "Foody.Services.ShoppingCartApi\Foody.Services.ShoppingCartApi.csproj", "{AA118556-C638-4C8C-B177-902069C004C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foody.Services.CouponApi", "Foody.Services.CouponApi\Foody.Services.CouponApi.csproj", "{510B3B82-3AB5-443A-A797-C5A3CF55C668}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{5E879DDD-BB8D-48C1-B14E-F9D3513515E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.MessageBus", "Foody.MessageBus\Foody.MessageBus.csproj", "{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +39,20 @@ Global
 		{AA118556-C638-4C8C-B177-902069C004C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA118556-C638-4C8C-B177-902069C004C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA118556-C638-4C8C-B177-902069C004C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510B3B82-3AB5-443A-A797-C5A3CF55C668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{510B3B82-3AB5-443A-A797-C5A3CF55C668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{510B3B82-3AB5-443A-A797-C5A3CF55C668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{510B3B82-3AB5-443A-A797-C5A3CF55C668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B9FAF710-DF53-41A8-81DA-063DCDBB4F1E} = {5E879DDD-BB8D-48C1-B14E-F9D3513515E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65A5A228-B411-4111-9960-BF9521C7C4AF}

@@ -11,5 +11,9 @@ namespace Foody.Services.ShoppingCartApi.Repository
         Task<bool> RemoveFromCart(int productId);
 
         Task<bool> ClearCart(string userId);
+
+        Task<bool> ApplyCoupon(string userId, string code);
+
+        Task<bool> RemoveCoupon(string userId);
     }
 }

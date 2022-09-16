@@ -65,11 +65,25 @@
                     <div class="row">
                         <div class="col-6">
                             <span>Coupon:</span>
-                            <input />
-                            <button type="submit" class="btn-success"> Apply </button>
+                            @if(string.IsNullOrEmpty(Model.CartHeader.CouponCode)){
+                                <input asp-for="CartHeader.CouponCode"/>
+                                <button asp-action="ApplyCoupon" type="submit" class="btn-success"> Apply </button>
+                            }else{
+                                <input asp-for="CartHeader.CouponCode" disabled/>
+                                <button asp-action="RemoveCoupon" type="submit" class="btn-danger"> Remove </button>
+                                if(Model.CartHeader.DiscountTotal<=0){
+                                    <span class="text-danger"> Invalid Coupon!</span>
+                                }
+                                
+                            }
+                            
+                            
                         </div>
                         <div class="col-6 text-end">
                             <span class="text-danger" style="font-size:21px;">  Order Total : @string.Format("{0:c}",Model.CartHeader.OrderTotal) <br /></span>
+                            @if(Model.CartHeader.DiscountTotal>0){
+                                <span class="text-success">  Order Discount : @string.Format("{0:c}",Model.CartHeader.DiscountTotal) <br /></span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -77,7 +91,7 @@
                     <div class="col-6 col-md-3 offset-md-6">
                     </div>
                     <div class="col-6 col-md-3">
-                        <a class="btn btn-success form-control ">
+                        <a asp-action="Checkout" class="btn btn-success form-control ">
                             <span>Checkout</span>
                         </a>
                     </div>

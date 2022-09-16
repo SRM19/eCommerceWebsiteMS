@@ -8,14 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
+builder.Services.AddHttpClient<ICouponService, CouponService>();
 
 //*Add service to dependency injection
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 //*Initialize service URL
 Constants.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
-Constants.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"]; 
+Constants.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
+Constants.CouponAPIBase = builder.Configuration["ServiceUrls:CouponAPI"];
 
 builder.Services.AddControllersWithViews();
 

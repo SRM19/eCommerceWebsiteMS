@@ -16,6 +16,21 @@ namespace Foody.Services.ShoppingCartApi.Repository
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
+        public async Task<bool> ApplyCoupon(string userId, string code)
+        {
+            var cartHeaderfromDb = await _dbContext.CartHeaders
+                                         .FirstOrDefaultAsync(c => c.UserId == userId);
+            if(cartHeaderfromDb!= null)
+            {
+                cartHeaderfromDb.CouponCode = code;
+                _dbContext.CartHeaders.Update(cartHeaderfromDb);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
         public async Task<bool> ClearCart(string userId)
         {
             var cartHeaderfromDb = await _dbContext.CartHeaders.FirstOrDefaultAsync(c =>
@@ -106,6 +121,20 @@ namespace Foody.Services.ShoppingCartApi.Repository
                                 .Include(c => c.Product);
             return _mapper.Map<CartDto>(cart);
 
+        }
+
+        public async Task<bool> RemoveCoupon(string userId)
+        {
+            var cartHeaderfromDb = await _dbContext.CartHeaders
+                                         .FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cartHeaderfromDb != null)
+            {
+                cartHeaderfromDb.CouponCode = "";
+                _dbContext.CartHeaders.Update(cartHeaderfromDb);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         //Remove product from cart
