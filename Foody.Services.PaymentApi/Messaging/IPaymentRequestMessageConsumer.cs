@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PaymentProcessor.Models.DataTransferObjs
+namespace Foody.Services.PaymentApi.Messaging
 {
-    internal class PaymentRequestDto
+    internal interface IPaymentRequestMessageConsumer
     {
     }
 }

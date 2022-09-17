@@ -17,12 +17,17 @@ namespace Foody.Services.ShoppingCartApi.Controllers
         private ICouponRepository _couponRepository;
         private IMessageBus _messageBus;
         protected ResponseDto _response;
-        public CartController(ICartRepository cartRepository, ICouponRepository couponRepository, IMessageBus messageBus)
+        private IConfiguration _configuration;
+
+        private readonly string CheckoutMessageQueue;
+        public CartController(ICartRepository cartRepository, IConfiguration configuration, ICouponRepository couponRepository, IMessageBus messageBus)
         {
             _cartRepository = cartRepository;
             _couponRepository = couponRepository;
             _messageBus = messageBus;
+            _configuration = configuration;
             _response = new();
+            CheckoutMessageQueue = _configuration.GetValue<string>("QueueConfiguration:CheckoutMessageQueue");
         }
 
         [Authorize]
@@ -171,7 +176,7 @@ namespace Foody.Services.ShoppingCartApi.Controllers
                 }
                
                 //logic to add message to process order
-                _messageBus.SendMessage(orderHeaderDto, "checkoutqueue");
+                _messageBus.SendMessage(orderHeaderDto, CheckoutMessageQueue);
 
                 await _cartRepository.ClearCart(orderHeaderDto.UserId);
             }

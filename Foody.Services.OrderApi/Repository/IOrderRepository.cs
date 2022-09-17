@@ -4,7 +4,7 @@ namespace Foody.Services.OrderApi.Repository
 {
     public interface IOrderRepository
     {
-        Task<bool> AddOrdertoDatabase(OrderDto order);
+        Task<OrderDto> AddOrdertoDatabase(OrderDto order);
 
         Task UpdatePaymentStatus(int orderHeaderId, bool paid);
 

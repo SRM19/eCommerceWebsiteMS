@@ -20,19 +20,20 @@ namespace Foody.Services.OrderApi.Repository
             _mapper = mapper;
         }
 
-        public async Task<bool> AddOrdertoDatabase(OrderDto orderDto)
+        public async Task<OrderDto> AddOrdertoDatabase(OrderDto orderDto)
         {
             //create application dbcontext here
             try
             {
                 await using var dbContext = new ApplicationDbContext(_dbContextOptions);
-                dbContext.Orders.Add(_mapper.Map<Order>(orderDto));
+                Order newOrder = _mapper.Map<Order>(orderDto);
+                dbContext.Orders.Add(newOrder);
                 await dbContext.SaveChangesAsync();
-                return true;
+                return _mapper.Map<OrderDto>(newOrder);
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
             
         }

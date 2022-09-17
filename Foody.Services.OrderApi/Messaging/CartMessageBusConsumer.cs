@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Foody.MessageBus;
 using Foody.Services.OrderApi.Messages;
 using Foody.Services.OrderApi.Models.DataTransferObjs;
 using Foody.Services.OrderApi.Repository;
@@ -11,17 +12,27 @@ using System.Threading.Channels;
 
 namespace Foody.Services.OrderApi.Messaging
 {
-    public class MessageBusConsumer : BackgroundService
+    public class CartMessageBusConsumer : BackgroundService
     {
         private readonly OrderRepository _orderRepository;
         private IConnection _connection;
         private IModel _channel;
         private IMapper _mapper;
+        private IMessageBus _messageBus;
+        private IConfiguration _configuration;
 
-        public MessageBusConsumer(OrderRepository orderRepository,IMapper mapper)
+        private readonly string CheckoutMessageQueue;
+        private readonly string PaymentRequestQueue;
+        private readonly string PaymentStatusUpdateQueue;
+        public CartMessageBusConsumer(OrderRepository orderRepository,IConfiguration configuration,IMapper mapper,IMessageBus messageBus)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _configuration = configuration;
+            _messageBus = messageBus;
+            CheckoutMessageQueue = _configuration.GetValue<string>("QueueConfiguration:CheckoutMessageQueue");
+            PaymentRequestQueue = _configuration.GetValue<string>("QueueConfiguration:PaymentRequestQueue");
+            PaymentStatusUpdateQueue = _configuration.GetValue<string>("QueueConfiguration:PaymentStatusUpdate");
 
             //can use existing connection
             if (GetConnection())
@@ -29,7 +40,7 @@ namespace Foody.Services.OrderApi.Messaging
                 //create channel to get msg from RMQ, channel is created as model in .net
                 _channel = _connection.CreateModel();
                 //read queue name from configuration file or static file
-                _channel.QueueDeclare(queue: "checkoutqueue", false, false, false, arguments: null);
+                _channel.QueueDeclare(queue: CheckoutMessageQueue, false, false, false, arguments: null);
             }          
         }
 
@@ -77,7 +88,7 @@ namespace Foody.Services.OrderApi.Messaging
             };
 
             //consume msg from queue
-            _channel.BasicConsume("checkoutqueue",false, consumer);
+            _channel.BasicConsume(CheckoutMessageQueue, false, consumer);
             
             return Task.CompletedTask;
         }
@@ -98,8 +109,25 @@ namespace Foody.Services.OrderApi.Messaging
                 fullOrderDto.TotalItems += detail.Count;
                 fullOrderDto.OrderDetails.Add(orderDetailDto);
             }
-            await _orderRepository.AddOrdertoDatabase(fullOrderDto);
+            var newPlacedOrder = await _orderRepository.AddOrdertoDatabase(fullOrderDto);
             
+            PaymentRequestDto paymentRequestDto = new PaymentRequestDto();
+            paymentRequestDto.OrderId = newPlacedOrder.OrderHeaderId;
+            paymentRequestDto.OrderTotal = fullOrderDto.OrderTotal;
+            paymentRequestDto.Name = fullOrderDto.FirstName + fullOrderDto.LastName;
+            paymentRequestDto.CardNumber = fullOrderDto.CardNumber;
+            paymentRequestDto.CVV = fullOrderDto.CVV;
+            paymentRequestDto.ExpiryMonthYear = fullOrderDto.ExpiryMonthYear;
+
+            try
+            {                
+                _messageBus.SendMessage(paymentRequestDto, PaymentRequestQueue);
+            }
+            catch (Exception)
+            {
+
+            }
+
         }
     }
 }

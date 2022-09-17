@@ -1,4 +1,5 @@
 using AutoMapper;
+using Foody.MessageBus;
 using Foody.Services.OrderApi;
 using Foody.Services.OrderApi.DbContexts;
 using Foody.Services.OrderApi.Messaging;
@@ -14,7 +15,7 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddSingleton<IMessageBus, MessageBus>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -24,7 +25,8 @@ optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCon
 
 builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options, mapper));
 
-builder.Services.AddHostedService<MessageBusConsumer>();
+builder.Services.AddHostedService<CartMessageBusConsumer>();
+builder.Services.AddHostedService<PaymentMessageBusConsumer>();
 
 //https://localhost:44375/ -> Identity Server URL
 builder.Services.AddAuthentication("Bearer")

@@ -24,7 +24,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Messages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Foody.MessageBus\Foody.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>
