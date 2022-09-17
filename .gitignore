@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 /Foody.Web/wwwroot/images
 /Foody.MessageBus
+/PaymentProcessor

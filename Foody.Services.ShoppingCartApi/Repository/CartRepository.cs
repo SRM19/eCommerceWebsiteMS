@@ -98,9 +98,11 @@ namespace Foody.Services.ShoppingCartApi.Repository
                 else
                 {
                     //update count of product
-                    cart.CartDetails.FirstOrDefault().Count += cartDetailsfromDb.Count;
-                    cart.CartDetails.FirstOrDefault().Product = null;
-                    _dbContext.CartDetails.Update(cart.CartDetails.FirstOrDefault());
+                    //cart.CartDetails.FirstOrDefault().Count += cartDetailsfromDb.Count;
+                    //cart.CartDetails.FirstOrDefault().Product = null;
+                    //_dbContext.CartDetails.Update(cart.CartDetails.FirstOrDefault());
+                    cartDetailsfromDb.Count += cart.CartDetails.FirstOrDefault().Count;
+                    _dbContext.CartDetails.Update(cartDetailsfromDb);
                     await _dbContext.SaveChangesAsync();
                 }
 

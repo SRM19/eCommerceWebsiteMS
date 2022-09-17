@@ -14,11 +14,13 @@ namespace Foody.Services.ShoppingCartApi.Controllers
     public class CartController : ControllerBase
     {
         private ICartRepository _cartRepository;
+        private ICouponRepository _couponRepository;
         private IMessageBus _messageBus;
         protected ResponseDto _response;
-        public CartController(ICartRepository cartRepository,IMessageBus messageBus)
+        public CartController(ICartRepository cartRepository, ICouponRepository couponRepository, IMessageBus messageBus)
         {
             _cartRepository = cartRepository;
+            _couponRepository = couponRepository;
             _messageBus = messageBus;
             _response = new();
         }
@@ -154,6 +156,20 @@ namespace Foody.Services.ShoppingCartApi.Controllers
                     return BadRequest();
                 }
                 orderHeaderDto.CartDetails = cartDto.CartDetails;
+
+                if (!string.IsNullOrEmpty(orderHeaderDto.CouponCode))
+                {
+                    //verify coupon is valid before place the order
+                    var coupon = await _couponRepository.GetCoupon(orderHeaderDto.CouponCode);
+                    if(orderHeaderDto.DiscountTotal != coupon.DiscountAmount)
+                    {
+                        _response.IsSuccess = false;
+                        _response.ErrorMessage = new List<string>() { "Coupon amount has changed. Please confirm" };
+                        _response.DisplayMessage = "Coupon amount has changed. Please confirm";
+                        return _response;
+                    }
+                }
+               
                 //logic to add message to process order
                 _messageBus.SendMessage(orderHeaderDto, "checkoutqueue");
 

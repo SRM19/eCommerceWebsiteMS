@@ -19,7 +19,6 @@ namespace Foody.Services.CouponApi.Controllers
             _response = new();
         }
 
-        [Authorize]
         [HttpGet("{code}")]
         public async Task<object> GetCoupon(string code)
         {
