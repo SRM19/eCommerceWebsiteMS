@@ -118,6 +118,7 @@ namespace Foody.Services.OrderApi.Messaging
             paymentRequestDto.CardNumber = fullOrderDto.CardNumber;
             paymentRequestDto.CVV = fullOrderDto.CVV;
             paymentRequestDto.ExpiryMonthYear = fullOrderDto.ExpiryMonthYear;
+            paymentRequestDto.UserEmail = fullOrderDto.Email;
 
             try
             {                

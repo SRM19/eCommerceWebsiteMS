@@ -1,4 +1,4 @@
-using Foody.MessageBus;
+using Foody.Services.PaymentApi;
 using Foody.Services.PaymentApi.Messaging;
 using PaymentProcessor;
 

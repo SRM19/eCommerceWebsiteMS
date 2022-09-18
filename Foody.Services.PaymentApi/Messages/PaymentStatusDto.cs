@@ -11,5 +11,6 @@ namespace Foody.Services.PaymentApi.Messages
     {
         public int OrderId { get; set; }
         public bool IsConfirmed { get; set; }
+        public string UserEmail { get; set; }
     }
 }

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor", "Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Services.PaymentApi", "Foody.Services.PaymentApi\Foody.Services.PaymentApi.csproj", "{CBADD2FF-9083-4213-9D85-9DEAA4F808A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foody.Services.Email", "Foody.Services.Email\Foody.Services.Email.csproj", "{B1C40560-581B-4DB6-98DB-39F46F9C2E0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{CBADD2FF-9083-4213-9D85-9DEAA4F808A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBADD2FF-9083-4213-9D85-9DEAA4F808A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBADD2FF-9083-4213-9D85-9DEAA4F808A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C40560-581B-4DB6-98DB-39F46F9C2E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C40560-581B-4DB6-98DB-39F46F9C2E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C40560-581B-4DB6-98DB-39F46F9C2E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C40560-581B-4DB6-98DB-39F46F9C2E0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

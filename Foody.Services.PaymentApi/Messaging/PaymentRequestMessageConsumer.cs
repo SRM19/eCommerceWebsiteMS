@@ -1,5 +1,4 @@
-﻿using Foody.MessageBus;
-using Foody.Services.PaymentApi.Messages;
+﻿using Foody.Services.PaymentApi.Messages;
 using Newtonsoft.Json;
 using PaymentProcessor;
 using RabbitMQ.Client;
@@ -94,11 +93,12 @@ namespace Foody.Services.PaymentApi.Messaging
             PaymentStatusDto paymentStatusDto = new()
             {
                 OrderId = paymentRequestDto.OrderId,
-                IsConfirmed = _processPayment.PaymentProcessor()
+                IsConfirmed = _processPayment.PaymentProcessor(),
+                UserEmail = paymentRequestDto.UserEmail
             };
 
-            //publish payment status to bus
-            _messageBus.SendMessage(paymentStatusDto, PaymentStatusMessageQueue);
+            //publish payment status to bus and also for email service
+            _messageBus.PublishMessage(paymentStatusDto);
 
         }
 

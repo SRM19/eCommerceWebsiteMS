@@ -1,6 +1,6 @@
 ﻿using Foody.MessageBus;
 
-namespace Foody.Services.OrderApi.Messages
+namespace Foody.Services.Email.Messages
 {
     public class PaymentStatusDto 
     {

@@ -1,29 +1,30 @@
-﻿using AutoMapper;
-using Foody.MessageBus;
-using Foody.Services.OrderApi.Messages;
-using Foody.Services.OrderApi.Models.DataTransferObjs;
-using Foody.Services.OrderApi.Repository;
+﻿using Foody.MessageBus;
+using Foody.Services.Email.Messages;
+using Foody.Services.Email.Repository;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using System.Text;
 using Newtonsoft.Json;
+using System.Threading.Channels;
 
-namespace Foody.Services.OrderApi.Messaging
+namespace Foody.Services.Email.Messaging
 {
-    public class PaymentMessageBusConsumer : BackgroundService
+    public class EmailMessageBusConsumer : BackgroundService
     {
-        private readonly OrderRepository _orderRepository;
+        private readonly EmailRepository _emailRepository;
         private IConnection _connection;
         private IModel _channel;
+        private IConfiguration _configuration;
         //private const string ExchangeName = "PubSubPaymentUpdate_Exchange";
-        //string queueName = "";
         private const string Direct_Exchange = "PubSubDirect_Exchange";
-        private readonly string PaymentStatusQueue = "paymentstatusqueue";
-        private readonly string PaymentRouteKey = "paymentstatus";
+        private readonly string EmailUpdateQueue = "emailupdatequeue";
+        private readonly string EmailRouteKey = "emailupdate";
+        //string queueName = "";
 
-        public PaymentMessageBusConsumer(OrderRepository orderRepository)
+        public EmailMessageBusConsumer(EmailRepository emailRepository, IConfiguration configuration)
         {
-            _orderRepository = orderRepository;           
+            _emailRepository = emailRepository;
+            _configuration = configuration;
 
             //can use existing connection
             if (GetConnection())
@@ -31,12 +32,13 @@ namespace Foody.Services.OrderApi.Messaging
                 //create channel to get msg from RMQ, channel is created as model in .net
                 _channel = _connection.CreateModel();
                 //declare exchange with the same name
-                //_channel.ExchangeDeclare(exchange: ExchangeName, ExchangeType.Fanout, false, false, arguments: null);
+                //_channel.ExchangeDeclare(exchange: ExchangeName,ExchangeType.Fanout, false, false, arguments: null);
+                //Direct exchange
                 _channel.ExchangeDeclare(Direct_Exchange, ExchangeType.Direct, false, false, arguments: null);
-                _channel.QueueDeclare(PaymentStatusQueue, false, false, false, null);
+                _channel.QueueDeclare(EmailUpdateQueue, false, false, false, null);
                 //bind a queue to listen to exchange, queue can be declared on the fly, queue can be created with custom name
                 //queueName = _channel.QueueDeclare().QueueName;
-                _channel.QueueBind(PaymentStatusQueue, Direct_Exchange, PaymentRouteKey);
+                _channel.QueueBind(EmailUpdateQueue, Direct_Exchange, EmailRouteKey);
             }
         }
 
@@ -84,15 +86,22 @@ namespace Foody.Services.OrderApi.Messaging
             };
 
             //consume msg from queue
-            _channel.BasicConsume(PaymentStatusQueue, false, consumer);
+            _channel.BasicConsume(EmailUpdateQueue, false, consumer);
 
             return Task.CompletedTask;
         }
 
         private async Task HandleMessage(PaymentStatusDto paymentStatusDto)
         {
-            await _orderRepository.UpdatePaymentStatus(paymentStatusDto.OrderId, paymentStatusDto.IsConfirmed);
+            try
+            {
+                await _emailRepository.SendandLogEmail(paymentStatusDto);
 
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
     }
 }
